@@ -140,3 +140,11 @@ jobs:
           name: artifact
           #From this path
           path: target/Lab2-faker-0.0.1-SNAPSHOT.jar
+
+      - name: Build & push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: diegodasa97/lab2-faker
+          tags: latest
+          registry: docker.io
+          dockerfile: Dockerfile

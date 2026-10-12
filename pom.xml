@@ -146,6 +146,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>Lab2-faker</finalName>
 	</build>
 
 </project>

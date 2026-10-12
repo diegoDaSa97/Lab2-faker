@@ -1,22 +1,29 @@
 
-FROM maven:3.9-eclipse-temurin-17 AS build
+# ==========================================
+# Etapa 1: Construcción de la aplicación
+# ==========================================
+FROM maven:3.9.11-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
+# Copiar el código fuente
+COPY . .
 
-RUN mvn -B -DskipTests package \
-    && JAR_FILE="$(find target -maxdepth 1 -type f -name '*.jar' ! -name '*.jar.original' | head -n 1)" \
-    && test -n "$JAR_FILE" \
-    && cp "$JAR_FILE" /app/app.jar
+# Compilar y empaquetar la aplicación
+RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:17-jre
+# ==========================================
+# Etapa 2: Ejecución de la aplicación
+# ==========================================
+FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
 
-COPY --from=build /app/app.jar app.jar
+# Copiar el JAR generado en la etapa de construcción
+COPY --from=build /app/target/Lab2-faker.jar Lab2-faker.jar
 
+# Puerto de la aplicación
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Ejecutar la aplicación
+ENTRYPOINT ["java", "-jar", "Lab2-faker.jar"]
